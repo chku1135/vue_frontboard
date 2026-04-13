@@ -12,7 +12,7 @@ spec:
       labels:
         app: frontend
       annotations:
-        timestamp: "{{ .Values.deployment.timestamp | default \"none\" }}"
+        timestamp: {{ .Values.deployment.timestamp | default "none" }}
     spec:
       containers:
         - name: frontend
