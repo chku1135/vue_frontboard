@@ -18,8 +18,7 @@ pipeline {
         stage("Deploy") {
             steps {
                 withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
-                    // --set deployment.timestamp=$(date +%s)濡?媛뺤젣 ?щ같???좊룄
-                    sh "helm upgrade --install frontend ./helm-chart -n ${NAMESPACE} --set deployment.timestamp=$(date +%s)"
+                    sh "helm upgrade --install frontend ./helm-chart -n ${NAMESPACE} --set deployment.timestamp=\$(date +%s)"
                 }
             }
         }
