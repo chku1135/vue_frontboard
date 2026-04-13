@@ -1,4 +1,4 @@
-﻿pipeline {
+pipeline {
     agent any
     environment {
         NAMESPACE = "vue-project"
@@ -18,7 +18,8 @@
         stage("Deploy") {
             steps {
                 withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
-                    sh "helm upgrade --install frontend ./helm-chart -n ${NAMESPACE}"
+                    // --set deployment.timestamp=$(date +%s)로 강제 재배포 유도
+                    sh "helm upgrade --install frontend ./helm-chart -n ${NAMESPACE} --set deployment.timestamp=$(date +%s)"
                 }
             }
         }
