@@ -1,4 +1,4 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
@@ -12,7 +12,7 @@ spec:
       labels:
         app: frontend
       annotations:
-        timestamp: "{{ .Values.deployment.timestamp }}"
+        timestamp: "{{ .Values.deployment.timestamp | default (now | date \"2006-01-02 15:04:05\") }}"
     spec:
       containers:
         - name: frontend
