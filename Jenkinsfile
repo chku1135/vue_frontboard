@@ -18,7 +18,7 @@ pipeline {
         stage("Deploy") {
             steps {
                 withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
-                    sh "helm upgrade --install frontend ./helm-chart -n ${NAMESPACE} --set deployment.timestamp=\$(date +%s)"
+                    sh "helm upgrade --install frontend ./helm-chart -n \${NAMESPACE} --set imagePullSecrets[0].name=harbor-registry-secret --set deployment.timestamp=\$(date +%s)"
                 }
             }
         }
