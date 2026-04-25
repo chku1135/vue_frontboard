@@ -11,13 +11,17 @@ pipeline {
         }
         stage("Docker Push") {
             steps {
-                sh "docker build -t 192.168.56.13:80/vue-project/frontend:latest ."
-                sh "docker push 192.168.56.13:80/vue-project/frontend:latest"
+                withCredentials([usernamePassword(credentialsId: 'harbor-auth', passwordVariable: 'HARBOR_PW', usernameVariable: 'HARBOR_USER')]) {
+                    sh 'echo $HARBOR_PW | docker login 192.168.56.13:80 -u $HARBOR_USER --password-stdin'
+                    sh "docker build -t 192.168.56.13:80/vue-project/frontend:latest ."
+                    sh "docker push 192.168.56.13:80/vue-project/frontend:latest"
+                }
             }
         }
         stage("Deploy") {
             steps {
-                withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
+                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG')]) {
+                //withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
                     sh "helm upgrade --install frontend ./helm-chart -n \${NAMESPACE} --set imagePullSecrets[0].name=harbor-registry-secret --set deployment.timestamp=\$(date +%s)"
                 }
             }
