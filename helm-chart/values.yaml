@@ -8,5 +8,8 @@ imagePullSecrets:
 
 deployment:
   timestamp: "none"
+
 service:
+  service: LoadBalancer
   port: 80
+  loadBalancerIP: "192.168.56.202"
